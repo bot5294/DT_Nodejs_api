@@ -1,8 +1,7 @@
-const multer = require("multer");
-const upload = multer({ dest: "../../../../uploads" });
-module.exports.createEvent = (req, res) => {
+const connection = require("../config/mongodb");
+module.exports.createEvent = async (req, res) => {
   try {
-    let data = ({
+    let {
       name,
       tageline,
       schedule,
@@ -11,13 +10,40 @@ module.exports.createEvent = (req, res) => {
       category,
       sub_category,
       rigor_rank,
-    } = req.body);
+    } = req.body;
     console.log("req.file\n");
-    console.log(req.files[0].originalname);
+    console.log(req.files[0].path);
     console.log("\n");
     console.log(req.body);
-    res.status(200).json({
-      message: `name received = s ${JSON.stringify(data)}`,
+    let arr = [];
+    arr = req.files;
+    for (let i = 0; i < arr.length; i++) arr[i] = arr[i].path;
+    let insertResult = connection(function (err, client) {
+      let db = client.db("DT_Nodejs_DB");
+      db.collection("events").insertOne(
+        {
+          name,
+          tageline,
+          schedule,
+          description,
+          moderator,
+          category,
+          sub_category,
+          rigor_rank,
+          photos: arr,
+        },
+        function (err, result) {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          console.log("inserted documents =>", result);
+          res.status(200).json({
+            message: `Event Created Successfully, Id =  ${result.insertedId}`,
+          });
+          return result;
+        }
+      );
     });
   } catch (err) {
     console.log(`Error at createEvent : ${err}`);
