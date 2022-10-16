@@ -38,5 +38,11 @@ router.post(
   upload.array("photos", 2),
   eventController.createEvent
 );
+router.put(
+  "/app/events/:id",
+  upload.array("photos", 2),
+  eventController.updateEvent
+);
+router.delete("/app/events/:id", eventController.deleteEvent);
 
 module.exports = router;
