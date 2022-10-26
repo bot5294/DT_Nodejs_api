@@ -175,34 +175,35 @@ module.exports.deleteEvent = (req, res) => {
   try {
     let id = req.params.id;
     if (ObjectId.isValid(id)) {
-      connection(async function (err, client) {
-        let db = await client.db("DT_Nodejs_DB");
-        let record = await db
-          .collection("events")
-          .findOneAndDelete({ _id: new ObjectId(id) });
-        if (record.value != null) {
-          let photoArr = [];
-          photoArr = record.value.photos;
-          for (let i = 0; i < photoArr.length; i++) {
-            let filename = photoArr[i];
-            if (fs.existsSync(filename)) {
-              fs.unlinkSync(filename);
-              console.log(`${filename} Deleted successfully`);
+      connection(function (err, client) {
+        let db = client.db("DT_Nodejs_DB");
+        db.collection("events")
+          .findOneAndDelete({ _id: new ObjectId(id) })
+          .then((record) => {
+            if (record.value != null) {
+              let photoArr = [];
+              photoArr = record.value.photos;
+              for (let i = 0; i < photoArr.length; i++) {
+                let filename = photoArr[i];
+                if (fs.existsSync(filename)) {
+                  fs.unlinkSync(filename);
+                  console.log(`${filename} Deleted successfully`);
+                } else {
+                  console.log(
+                    "file not exists, unable delete photos at updateEvent"
+                  );
+                }
+              }
+              return res.status(200).json({
+                message: "This document Delete Successfully",
+                record: record,
+              });
             } else {
-              console.log(
-                "file not exists, unable delete photos at updateEvent"
-              );
+              return res.status(404).json({
+                message: "No records found for this id",
+              });
             }
-          }
-          return res.status(200).json({
-            message: "This document Delete Successfully",
-            record: record,
           });
-        } else {
-          return res.status(404).json({
-            message: "No records found for this id",
-          });
-        }
       });
     } else {
       return res.status(404).json({
