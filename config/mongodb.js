@@ -1,19 +1,15 @@
 const { MongoClient } = require("mongodb");
-// or as an es module:
-// import { MongoClient } from "mongodb";
+// Database Name
+const dbName = "DT_Nodejs_DB";
+// Connection URL
+const url = `mongodb://localhost:27017/${dbName}`;
 
-module.exports = function (callback) {
-  // Database Name
-  const dbName = "DT_Nodejs_DB";
-  // Connection URL
-  const url = `mongodb://localhost:27017/${dbName}`;
-  // const client = new MongoClient(url);
-  // Use connect method to connect to the server
-  console.log("connected to db");
-  MongoClient.connect(url, callback);
+module.exports = {
+  connectToserver: function (callback) {
+    MongoClient.connect(url, function (err, client) {
+      if (err) throw err;
+      const db = client.db(dbName);
+      return callback(err, db);
+    });
+  },
 };
-
-// console.log("db inside mongo " + db);
-// module.exports = db;
-
-// the following code examples can be pasted here...
