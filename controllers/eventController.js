@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const fs = require("fs");
-module.exports.createEvent = (req, res) => {
+const ApiResponse = require("../response-handler/ApiResponse");
+module.exports.createEvent = (req, res, next) => {
   try {
     let {
       name,
@@ -36,21 +37,22 @@ module.exports.createEvent = (req, res) => {
           return;
         }
         console.log("inserted documents =>", result);
-        res.status(200).json({
-          message: `Event Created Successfully, Id =  ${result.insertedId}`,
-        });
-        return result;
+        next(
+          ApiResponse.badRequest(
+            `Event Created Successfully, Id =  ${result.insertedId}`
+          )
+        );
+        return;
       }
     );
   } catch (err) {
     console.log(`Error at createEvent : ${err}`);
-    return res.status(500).json({
-      message: "Internal Server Error, Contact Admin",
-    });
+    next(ApiResponse.badRequest("Internal Server Error, Contact Admin"));
+    return;
   }
 };
 
-module.exports.updateEvent = (req, res) => {
+module.exports.updateEvent = (req, res, next) => {
   try {
     let id = req.params.id;
     if (ObjectId.isValid(id)) {
@@ -78,9 +80,8 @@ module.exports.updateEvent = (req, res) => {
       console.log("arr.length", arr.length);
       if (isPhotoProvided) {
         if (arr.length != 2) {
-          return res.status(401).json({
-            message: "Provide only 2 photos or none",
-          });
+          next(ApiResponse.badRequest("Provide only 2 photos or none"));
+          return;
         }
         const collection = req.app.locals.collection;
         collection
@@ -116,10 +117,8 @@ module.exports.updateEvent = (req, res) => {
                   );
                 }
               }
-              return res.status(200).json({
-                message: "This record updated successfully",
-                record: record,
-              });
+              next(ApiResponse.badRequest(`This record updated successfully`));
+              return;
             }
           });
       } else {
@@ -152,19 +151,17 @@ module.exports.updateEvent = (req, res) => {
           });
       }
     } else {
-      return res.status(404).json({
-        message: "Provide legitimate id",
-      });
+      next(ApiResponse.badRequest("Provide legitimate id"));
+      return;
     }
   } catch (err) {
     console.log(`Error at updateEvent : ${err}`);
-    return res.status(500).json({
-      message: "Internal Server Error, Contact Admin",
-    });
+    next(ApiResponse.badRequest("Internal Server Error,Contact Admin"));
+    return;
   }
 };
 
-module.exports.deleteEvent = (req, res) => {
+module.exports.deleteEvent = (req, res, next) => {
   try {
     let id = req.params.id;
     if (ObjectId.isValid(id)) {
@@ -185,28 +182,25 @@ module.exports.deleteEvent = (req, res) => {
             }
           }
           return res.status(200).json({
-            message: "This document Delete Successfully",
+            message: "This document Deleted Successfully",
             record: record,
           });
         } else {
-          return res.status(404).json({
-            message: "No records found for this id",
-          });
+          next(ApiResponse.notFound("No records Found for this id"));
+          return;
         }
       });
     } else {
-      return res.status(404).json({
-        message: "Provide legitimate id",
-      });
+      next(ApiResponse.badRequest("Provide legitimate id"));
+      return;
     }
   } catch (err) {
-    return res.status(500).json({
-      message: "Internal Server Error,contact Admin",
-    });
+    next(ApiResponse.badRequest("Internal Server Error,Contact Admin"));
+    return;
   }
 };
 
-module.exports.getEventDetails = (req, res) => {
+module.exports.getEventDetails = (req, res, next) => {
   try {
     if (req.query.id) {
       let id = req.query.id;
@@ -219,15 +213,13 @@ module.exports.getEventDetails = (req, res) => {
               event: record,
             });
           } else {
-            return res.status(404).json({
-              message: `No record found with this id`,
-            });
+            next(ApiResponse.notFound("No record found for this id"));
+            return;
           }
         });
       } else {
-        return res.status(404).json({
-          message: "Provide legitimate id",
-        });
+        next(ApiResponse.badRequest("Provide legitimate id"));
+        return;
       }
     } else {
       let type = req.query.type;
@@ -268,16 +260,14 @@ module.exports.getEventDetails = (req, res) => {
               });
             });
         } else {
-          return res.status(404).json({
-            message: `No record found`,
-          });
+          next(ApiResponse.notFound("No record found"));
+          return;
         }
       });
     }
   } catch (err) {
     console.log(`Error at  ${err}`);
-    return res.status(500).json({
-      message: "Internal Server Error, Contact Admin",
-    });
+    next(ApiResponse.badRequest("Provide legitimate id"));
+    return;
   }
 };
