@@ -222,21 +222,22 @@ module.exports.getEventDetails = (req, res) => {
     if (req.query.id) {
       let id = req.query.id;
       if (ObjectId.isValid(id)) {
-        connection(async function (err, client) {
-          let db = await client.db("DT_Nodejs_DB");
-          let record = await db
-            .collection("events")
-            .findOne({ _id: new ObjectId(id) });
-          if (record) {
-            return res.status(200).json({
-              message: `Here are the requested event details`,
-              event: record,
+        connection(function (err, client) {
+          let db = client.db("DT_Nodejs_DB");
+          db.collection("events")
+            .findOne({ _id: new ObjectId(id) })
+            .then((record) => {
+              if (record) {
+                return res.status(200).json({
+                  message: `Here are the requested event details`,
+                  event: record,
+                });
+              } else {
+                return res.status(404).json({
+                  message: `No record found with this id`,
+                });
+              }
             });
-          } else {
-            return res.status(404).json({
-              message: `No record found with this id`,
-            });
-          }
         });
       } else {
         return res.status(404).json({
@@ -261,30 +262,34 @@ module.exports.getEventDetails = (req, res) => {
           howToSort = 1;
           break;
       }
-      connection(async function (err, client) {
-        let db = await client.db("DT_Nodejs_DB");
-        let cursor = await db
+      connection(function (err, client) {
+        let db = client.db("DT_Nodejs_DB");
+        let cursor = db
           .collection("events")
           .find({}, { projection: { name: 1, schedule: 1 } })
           .sort({ schedule: howToSort })
           .skip(startIndex)
           .limit(limit);
-        let recordCount = await cursor.count();
-        let isAvailable = recordCount > 0;
-        if (isAvailable) {
-          let arr = [];
-          await cursor.forEach((e) => {
-            arr.push(e);
-          });
-          return res.status(200).json({
-            message: `Here are the requested event details`,
-            event: arr,
-          });
-        } else {
-          return res.status(404).json({
-            message: `No record found`,
-          });
-        }
+        cursor.count().then((recordCount) => {
+          let isAvailable = recordCount > 0;
+          if (isAvailable) {
+            let arr = [];
+            cursor
+              .forEach((e) => {
+                arr.push(e);
+              })
+              .then(() => {
+                return res.status(200).json({
+                  message: `Here are the requested event details`,
+                  event: arr,
+                });
+              });
+          } else {
+            return res.status(404).json({
+              message: `No record found`,
+            });
+          }
+        });
       });
     }
   } catch (err) {
