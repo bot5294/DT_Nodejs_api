@@ -230,10 +230,10 @@ module.exports.getEventDetails = (req, res, next) => {
       let howToSort;
       switch (type) {
         case "latest":
-          howToSort = 1;
+          howToSort = -1;
           break;
         case "oldest":
-          howToSort = -1;
+          howToSort = 1;
           break;
         default:
           howToSort = 1;
