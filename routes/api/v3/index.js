@@ -4,9 +4,11 @@ const multer = require("multer");
 const path = require("path");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    // console.log("file@destination = ", file);
     cb(null, "./uploads");
   },
   filename: function (req, file, cb) {
+    // console.log("file@storage = ", file);
     const uniqueSuffix =
       Date.now() +
       "-" +
@@ -18,6 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: function (req, file, callback) {
+    console.log("file= ", file);
     let ext = path.extname(file.originalname);
     if (ext !== ".png" && ext !== ".jpg" && ext !== ".gif" && ext !== ".jpeg") {
       return callback(new Error("Only images are allowed"));

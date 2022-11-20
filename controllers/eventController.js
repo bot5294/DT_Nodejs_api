@@ -14,8 +14,10 @@ module.exports.createEvent = (req, res, next) => {
       sub_category,
       rigor_rank,
     } = req.body;
+    console.log("req.files : ", req.files);
     let arr = [];
     arr = req.files;
+    console.log("arr : ", arr);
     for (let i = 0; i < arr.length; i++) arr[i] = arr[i].path;
     const collection = req.app.locals.collection;
     collection.insertOne(
@@ -36,9 +38,9 @@ module.exports.createEvent = (req, res, next) => {
           console.log(err);
           return;
         }
-        console.log("inserted documents =>", result);
+        // console.log("inserted documents =>", result);
         next(
-          ApiResponse.badRequest(
+          ApiResponse.success(
             `Event Created Successfully, Id =  ${result.insertedId}`
           )
         );
@@ -186,12 +188,12 @@ module.exports.deleteEvent = (req, res, next) => {
             record: record,
           });
         } else {
-          next(ApiResponse.notFound("No records Found for this id"));
+          next(ApiResponse.success("No records Found for this id"));
           return;
         }
       });
     } else {
-      next(ApiResponse.badRequest("Provide legitimate id"));
+      next(ApiResponse.success("Provide legitimate id"));
       return;
     }
   } catch (err) {
