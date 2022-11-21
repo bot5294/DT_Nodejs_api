@@ -3,4 +3,5 @@ module.exports = {
   ...require("./get"),
   ...require("./post"),
   ...require("./del"),
+  ...require("./put"),
 };

@@ -12,7 +12,6 @@ module.exports.get = () => {
   inquirer.prompt(query).then((result) => {
     switch (result.event) {
       case "events":
-        console.log("inside events");
         inquirer
           .prompt({
             type: "rawlist",

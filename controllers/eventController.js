@@ -57,6 +57,7 @@ module.exports.createEvent = (req, res, next) => {
 module.exports.updateEvent = (req, res, next) => {
   try {
     let id = req.params.id;
+    console.log(ObjectId.isValid(id));
     if (ObjectId.isValid(id)) {
       let {
         name,
@@ -74,9 +75,10 @@ module.exports.updateEvent = (req, res, next) => {
       for (let i = 0; i < arr.length; i++) arr[i] = arr[i].path;
       let attendeesArr = [];
       attendeesArr = attendees;
-      attendeesArr.forEach((element) => {
-        return ObjectId(element);
-      });
+      if (attendeesArr.length > 0)
+        attendeesArr.forEach((element) => {
+          if (ObjectId.isValid(element)) return ObjectId(element);
+        });
       let isPhotoProvided = arr.length > 0 ? true : false;
       console.log("isPhotoProvided : ", isPhotoProvided);
       console.log("arr.length", arr.length);
