@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const fs = require("fs");
 const ApiResponse = require("../response-handler/ApiResponse");
+const { log } = require("console");
 module.exports.createEvent = (req, res, next) => {
   try {
     let {
@@ -74,11 +75,16 @@ module.exports.updateEvent = (req, res, next) => {
       arr = req.files;
       for (let i = 0; i < arr.length; i++) arr[i] = arr[i].path;
       let attendeesArr = [];
+      console.log(attendees, "Inside eContoller");
       attendeesArr = attendees;
-      if (attendeesArr.length > 0)
-        attendeesArr.forEach((element) => {
-          if (ObjectId.isValid(element)) return ObjectId(element);
-        });
+      console.log(attendeesArr);
+      if (Array.isArray(attendeesArr))
+        if (attendeesArr.length > 0) {
+          console.log(attendeesArr.length);
+          attendeesArr.forEach((element) => {
+            if (ObjectId.isValid(element)) return ObjectId(element);
+          });
+        }
       let isPhotoProvided = arr.length > 0 ? true : false;
       console.log("isPhotoProvided : ", isPhotoProvided);
       console.log("arr.length", arr.length);

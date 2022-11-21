@@ -24,6 +24,8 @@ module.exports.put = () => {
           let tdate = event.schedule.split("/");
           tdate = new Date(`${tdate[0]}-${tdate[1]}-${tdate[2]}`);
           // console.log(tdate);
+          let attendeesArr =
+            event.attendees == "empty" ? new Array() : [event.attendees];
           inquirer
             .prompt([
               {
@@ -90,7 +92,7 @@ module.exports.put = () => {
                 message:
                   "Edit Attendees(select attendees which you want to retain) :",
                 type: "checkbox",
-                choices: [...event.attendees],
+                choices: [...attendeesArr],
               },
               {
                 name: "new_attendees",
@@ -100,7 +102,11 @@ module.exports.put = () => {
               },
             ])
             .then((result) => {
+              console.log(result.new_attendees, " : New Attendees");
+              console.log(result.new_attendees == "null");
+              console.log(result.attendees, " : attendees");
               if (result.new_attendees != "null") {
+                console.log("inside new_attendees");
                 result.attendees.push(result.new_attendees);
               }
               result.id = event._id;

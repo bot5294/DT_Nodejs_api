@@ -7,11 +7,18 @@ module.exports.put = (result) => {
   for (const [key, value] of Object.entries(result)) {
     // console.log(key, value);
     if (key == "attendees") {
-      value.forEach((f) => {
-        data.append(key, f);
-      });
-    }
-    if (key == "schedule") {
+      console.log("attendees : ", value);
+      if (value.length > 0) {
+        console.log("inside value.length>0");
+        value.forEach((f) => {
+          console.log("individual attendee : ", key + " , " + f);
+          data.append(key, f);
+        });
+      } else {
+        console.log("inside else : " + key + " , " + value);
+        data.append(key, "empty");
+      }
+    } else if (key == "schedule") {
       //   let dvalue = new Date(value);
       //   let svalue = value + "";
       //   let index = svalue.indexOf("T");
@@ -24,7 +31,7 @@ module.exports.put = (result) => {
       data.append(`${key}`, `${value}`);
     }
   }
-  //   console.log(data);
+  // console.log(data);
   let config = {
     method: "put",
     url: `http://localhost:5294/api/v3/app/events/${result.id}`,

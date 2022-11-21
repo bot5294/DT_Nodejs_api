@@ -1,9 +1,9 @@
 const postData = require("../utils/postData");
 const fs = require("fs");
 
-// const filename = process.argv[2];
+const args = process.argv;
 
-module.exports.post = (args) => {
+module.exports.post = () => {
   let filename = `${args[3]}`;
   //   console.log(args[3]);
   fs.readFile(filename, "utf8", (err, data) => {
