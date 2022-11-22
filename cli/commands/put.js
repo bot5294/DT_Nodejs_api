@@ -27,7 +27,7 @@ module.exports.put = () => {
             tdate = new Date(`${tdate[0]}-${tdate[1]}-${tdate[2]}`);
             // console.log(tdate);
             let attendeesArr =
-              event.attendees == "empty" ? new Array() : [event.attendees];
+              event.attendees == "empty" ? new Array() : [...event.attendees];
             inquirer
               .prompt([
                 {
