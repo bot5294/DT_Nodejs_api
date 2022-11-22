@@ -27,6 +27,9 @@ module.exports.del = () => {
           } else {
             reject(awaitResult);
           }
+        } else {
+          console.log("\n");
+          resolve(true);
         }
       });
   });

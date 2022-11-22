@@ -10,7 +10,11 @@ module.exports.del = (url) => {
     axios(config)
       .then(function (response) {
         response = response.data;
-        console.log("\n" + response);
+        if (response.message == undefined) {
+          console.log("\n" + response + "\n");
+        } else {
+          console.log("\n" + response.message + " \n");
+        }
         resolve(true);
       })
       .catch(function (error) {

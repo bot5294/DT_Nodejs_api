@@ -48,10 +48,12 @@ module.exports.start = () => {
               name: "file",
               message: "Enter file address : ",
               type: "input",
-              prefix: "./",
             })
-            .then((result) => {
-              post(result.file);
+            .then(async (result) => {
+              awaitResult = await post(result.file);
+              if (awaitResult) {
+                return menu();
+              }
             });
           break;
         case "Delete":
@@ -59,6 +61,11 @@ module.exports.start = () => {
           if (awaitResult) {
             return menu();
           }
+          break;
+        case "Put":
+          awaitResult = await put();
+          console.log(awaitResult);
+          if (awaitResult) return menu();
           break;
         case "Exit":
           loop.shouldLoop = false;
