@@ -3,8 +3,13 @@ const fs = require("fs");
 
 const args = process.argv;
 
-module.exports.post = () => {
-  let filename = `${args[3]}`;
+module.exports.post = (file) => {
+  let filename = "";
+  if (file) {
+    filename = file;
+  } else {
+    filename = `${args[3]}`;
+  }
   //   console.log(args[3]);
   fs.readFile(filename, "utf8", (err, data) => {
     if (err) throw err;

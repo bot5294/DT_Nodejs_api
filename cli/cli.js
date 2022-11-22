@@ -2,6 +2,7 @@
 const program = require("commander");
 const { description, version } = require("../package.json");
 const { get, display, post, del, put } = require("./commands");
+const menu = require("./menu");
 // Welcome.display();
 
 program.command("get").action(get);
@@ -9,7 +10,7 @@ program.command("display").action(display);
 program.command("delete").action(del);
 program.command("put").action(put);
 program.command("post").parse(process.argv).action(post);
-
+program.command("menu").action(menu.start);
 // .parse(process.argv);
 // program.description(description).version(version, "-v,--version");
 program.parse();
