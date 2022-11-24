@@ -2,6 +2,12 @@
 
 # TASK 2 Link : [Task 2: Create API Documentation](https://docs.google.com/spreadsheets/d/1mwk_oneWY-uZC1cNgLB6bD2NvT4Punrgj_-anoW5lBw/edit?usp=sharing)
 
+
+# TASK 1 has 3 branches:
+1) Main Branch : base code <br>
+2) Refactor Branch : has universal apihandler,universal mongodb connection,no use of async /await <br>
+3) Cli Branch : added a command line interface to work with backend application. <br>
+<br>
 ## Tech Stack
 => Node js<br>
 => Express js<br>
