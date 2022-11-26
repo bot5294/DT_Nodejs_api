@@ -23,7 +23,7 @@ module.exports.put = (result) => {
         //   let dvalue = new Date(value);
         //   let svalue = value + "";
         //   let index = svalue.indexOf("T");
-        let date = moment(value).format("MM/DD/YYYY");
+        let date = moment(value).format("MM/DD/YYYY  hh:mm");
         //   let date = svalue.substring(0, index);
         //   date = date.split("-");
         //   console.log(date);
