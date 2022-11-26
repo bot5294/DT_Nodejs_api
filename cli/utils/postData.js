@@ -13,6 +13,19 @@ module.exports.post = async (arr) => {
         e[1].forEach((f) => {
           data.append(e[0], fs.createReadStream(`${f}`));
         });
+      } else if (e[0] == "schedule"){
+        var date_time = e[1].split(" ");
+        var date = date_time[0].split("/"),
+            m = date[0],
+            d = date[1],
+            y = date[2],
+            time = date_time[1].split(":"),
+            h = time[0],
+            min = time[1];
+            
+        e[1] =  `${new Date(y,m,d,h,m).toUTCString()}`;
+
+        data.append(e[0], e[1]);
       } else {
         data.append(e[0], e[1]);
       }
