@@ -23,8 +23,6 @@ module.exports.put = () => {
           .then((res) => {
             let event = res.data.event;
             // console.log(event.schedule);
-            let tdate = event.schedule.split("/");
-            tdate = new Date(`${tdate[0]}-${tdate[1]}-${tdate[2]}`);
             // console.log(tdate);
             let attendeesArr =
               event.attendees == "empty" ? new Array() : [...event.attendees];
@@ -51,12 +49,7 @@ module.exports.put = () => {
                   //   t * 1000 > Date.now() + 86400000 || "God I hope not!",
                   // transformer: (s) => chalk.bold.red(s),
                   locale: "en-US",
-                  default: tdate,
-                  format: {
-                    month: "numeric",
-                    hour: undefined,
-                    minute: undefined,
-                  },
+                  default: new Date(event.schedule),
                   clearable: true,
                 },
                 {
